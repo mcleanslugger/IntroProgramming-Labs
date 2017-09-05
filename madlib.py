@@ -1,3 +1,6 @@
+#Introduction to Programming
+#Author: David Siegel
+#Date: 9/5/2017
 def main():
     noun = input("Enter a noun: ")
     verb = input("Enter a verb: ")
