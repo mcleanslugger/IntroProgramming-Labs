@@ -13,10 +13,15 @@ def showOutro():
     print("\nPlease come back again soon!")
 
 def doLoop():
-    num1 = int(input("Enter the first number: "))
-    num2 = int(input("Enter the second number: "))
-    result = 0
+    result = 0    
     while True:
+        try:
+            num1 = int(input("Enter the first number: "))
+            num2 = int(input("Enter the second number: "))
+        except:
+            print("You did not enter valid numbers. Please try again.")
+            continue
+        
         cmd = input("What computation do you want to perform? ")
         cmd = cmd.lower()
 
