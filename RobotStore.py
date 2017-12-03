@@ -1,5 +1,6 @@
-## RobotStore.py
-## Author: David Siegel
+# RobotStore.py
+# Author: David Siegel
+
 
 class Product:
     def __init__ (self, name, price, stock):
@@ -14,52 +15,76 @@ class Product:
             return False
 
     def totalCost(self, amount):
-        return (int(self.price) * int(amount))
+        return int(self.price) * int(amount)
 
     def updateStock(self, amount):
         self.stock -= amount
-        
-        
 
-productNames = [ Product("Ultrasound range finder", 2.50, 4)
-               , Product("Servo motor", 14.99, 10)
-               , Product("Servo controller", 44.95, 5)
-               , Product("Microcontroller Board", 34.95, 7)
-               , Product("Laser range finder", 149.99, 2)
-               , Product("Lithium polymer battery", 8.99, 8)
-               ]
+
+UltrasoundRangeFinder = Product("Ultrasound range finder", 2.50, 4)
+
+ServoMotor = Product("Servo motor", 14.99, 10)
+
+ServoController = Product("Servo controller", 44.95, 5)
+
+Microcontroller = Product("Microcontroller Board", 34.95, 7)
+
+LaserRangeFinder = Product("Laser range finder", 149.99, 2)
+
+Battery = Product("Lithium polymer battery", 8.99, 8)
+
+Items = [UltrasoundRangeFinder, ServoMotor, ServoController, Microcontroller, LaserRangeFinder, Battery]
+
+
+def handleCashInput():
+    print("\nSorry, that is not a valid amount. Please try again.\n")
+    main()
+
 
 def printStock():
     print()
     print("Available Products")
     print("------------------")
-    for i in range(0, len(productNames)):
-        if productNames[i].stock > 0:
-            print(str(i) + ")", productNames[i].name, "$", productNames[i].price)
+    for i in range(0, len(Items)):
+        if Items[i].stock > 0:
+            print(str(i) + ")", Items[i].name,
+                  "$", Items[i].price,
+                  "with", Items[i].stock, "left in stock.")
     print()
 
+
 def main():
-    cash = float(input("How much money do you have? $"))
-    while cash > 0:
-        printStock()
+    try:
+        cash = float(input("How much money do you have? $"))
+    except ValueError:
+        handleCashInput()
 
-        vals = input("Enter product ID and quantity you wish to buy: ").split(" ")
+    try:
+        while cash > 0:
+            printStock()
 
-        if vals[0] == "quit": break
+            vals = input("Enter product ID and quantity you wish to buy: ").split(" ")
 
-        prodID = int(vals[0])
-        count = int(vals[1])
+            if vals[0] == "quit": break
 
-        if productNames[prodID].stock >= Product.checkStock(productNames[prodID], count):
-            if cash >= Product.totalCost(productNames[prodID], count):
-                Product.updateStock(productNames[prodID], count)
-                cash -= productNames[prodID].price * count
-                print("You have purchased", count, productNames[prodID].name + ".")
-                print("You have $", "{0:.2f}".format(cash), "remaining.")
+            prodID = int(vals[0])
+            count = int(vals[1])
+            cost = Product.totalCost(Items[prodID], count)
+
+            if Product.checkStock(Items[prodID], count):
+                if cash >= cost:
+                    Product.updateStock(Items[prodID], count)
+                    cash -= cost
+                    print("You have purchased", count, Items[prodID].name + ".")
+                    print("You have $", "{0:.2f}".format(cash), "remaining.")
+                else:
+                    print("Sorry, you can't afford that product.")
+            elif Items[prodID].stock < count:
+                print("Sorry, we don't have that many units of", Items[prodID].name + ".")
             else:
-                print("Sorry, you cannot afford that product.")
-        else:
-            print("Sorry, we are sold out of", productNames[prodID])
+                print("Sorry, we are sold out of", Items[prodID].name)
+    except UnboundLocalError:
+        pass
 
 
 main()
